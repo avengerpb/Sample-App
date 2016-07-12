@@ -10,6 +10,7 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  has_many :microposts
 
   # Returns the hash digest of the given string.
   def User.digest(string)
@@ -68,6 +69,9 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+ def feed
+    Micropost.where("user_id = ?", id)
+  end
 private
 
     # Converts email to all lower-case.
